@@ -72,7 +72,8 @@ jobs:
         git_clone https://github.com/jerrykuku/luci-theme-argon
         git_clone https://github.com/jerrykuku/luci-app-argon-config
         git_clone https://github.com/jerrykuku/luci-app-vssr
-        git_clone https://github.com/sirpdboy/luci-app-ddns-go ddnsgo && mvdir ddnsgo
+        #git_clone https://github.com/sirpdboy/luci-app-ddns-go ddnsgo && mvdir ddnsgo
+        git_clone https://github.com/sirpdboy/luci-app-ddns-go
         # git_clone https://github.com/sirpdboy/netspeedtest && mv -n netspeedtest/luci-app-netspeedtest ./ ; rm -rf netspeedtest
         ) &
         (
