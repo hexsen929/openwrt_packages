@@ -108,6 +108,9 @@ jobs:
         git_clone https://github.com/sundaqiang/openwrt-packages && mv -n openwrt-packages/luci-* ./; rm -rf openwrt-packages
         git_clone https://github.com/vernesong/OpenClash && mv -n OpenClash/luci-app-openclash ./; rm -rf OpenClash
         ) &
+        (
+        git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod
+        ) &
     - name: Delete duplicated packages
       run: |
         shopt -s extglob
