@@ -111,7 +111,7 @@ jobs:
         ) &
         (
         git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod
-        git_sparse_clone master "https://github.com/kiddin9/openwrt-packages/tree/master/" "kiddin9diy" diy
+        git_sparse_clone master "https://github.com/kiddin9/openwrt-packages.git" "kiddin9diy" diy
         ) &
     - name: Delete duplicated packages
       run: |
