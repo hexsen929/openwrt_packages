@@ -114,7 +114,12 @@ jobs:
         git_sparse_clone master "https://github.com/kiddin9/openwrt-packages" "diy2" diy/
         ) &
     - name: Delete duplicated packages
+      run: |
+        shopt -s extglob
         rm -Rf */.git
+    - name: SSH connection to Actions
+      uses: kiddin9/debugger-action@master
+      if: github.event.inputs.ssh == 'true'
     - name: Apply
       run: |
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
