@@ -1,6 +1,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-ssr-plus
+PKG_VERSION:=186
+PKG_RELEASE:=6
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_NONE_V2RAY \
@@ -94,7 +96,7 @@ endchoice
 
 choice
 	prompt "V2ray-core Selection"
-	default PACKAGE_$(PKG_NAME)_INCLUDE_Xray
+	default PACKAGE_$(PKG_NAME)_INCLUDE_Xray if aarch64||arm||i386||x86_64
 	default PACKAGE_$(PKG_NAME)_INCLUDE_NONE_V2RAY
 
 	config PACKAGE_$(PKG_NAME)_INCLUDE_NONE_V2RAY
