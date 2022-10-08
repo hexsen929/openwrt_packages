@@ -112,6 +112,7 @@ jobs:
         ) &
         (
         git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod package/lean/luci-app-qbittorrent-simple
+        git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leluci" applications/luci-app-qbittorrent
         git_sparse_clone master "https://github.com/coolsnowwolf/packages" "leanpkg2" \
         net/qBittorrent-static net/qBittorrent net/transmission net/phtunnel libs/qtbase libs/qttools libs/rblibtorrent
         git_sparse_clone main "https://github.com/Lienol/openwrt-package" "lienolpkg" luci-app-kodexplorer
