@@ -65,7 +65,7 @@ jobs:
         (
         git_clone https://github.com/xiaorouji/openwrt-passwall && mvdir openwrt-passwall
         git_clone https://github.com/fw876/helloworld && mvdir helloworld
-        git_clone https://github.com/kiddin9/qBittorrent-Enhanced-Edition
+        #git_clone https://github.com/kiddin9/qBittorrent-Enhanced-Edition
         # git_clone https://github.com/riverscn/openwrt-iptvhelper && mvdir openwrt-iptvhelper
         ) &
         (
