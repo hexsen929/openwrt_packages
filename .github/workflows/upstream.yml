@@ -65,7 +65,7 @@ jobs:
         (
         git_clone https://github.com/xiaorouji/openwrt-passwall && mvdir openwrt-passwall
         git_clone https://github.com/fw876/helloworld && mvdir helloworld
-        #git_clone https://github.com/kiddin9/qBittorrent-Enhanced-Edition
+        git_clone https://github.com/kiddin9/qBittorrent-Enhanced-Edition
         # git_clone https://github.com/riverscn/openwrt-iptvhelper && mvdir openwrt-iptvhelper
         ) &
         (
@@ -112,9 +112,9 @@ jobs:
         ) &
         (
         git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod package/lean/luci-app-qbittorrent-simple
-        git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leluci" applications/luci-app-qbittorrent
-        #git_sparse_clone master "https://github.com/coolsnowwolf/packages" "leanpkg2" \
-        #net/qBittorrent-static net/qBittorrent net/transmission net/phtunnel libs/qtbase libs/qttools libs/rblibtorrent
+        #git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leluci" applications/luci-app-qbittorrent
+        git_sparse_clone master "https://github.com/coolsnowwolf/packages" "leanpkg2" \
+        net/qBittorrent-static net/qBittorrent net/transmission net/phtunnel libs/qtbase libs/qttools libs/rblibtorrent
         git_sparse_clone main "https://github.com/Lienol/openwrt-package" "lienolpkg" luci-app-kodexplorer
         ) &
     - name: Delete duplicated packages
