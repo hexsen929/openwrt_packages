@@ -112,8 +112,8 @@ jobs:
         (
         git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod
         git_sparse_clone main "https://github.com/Lienol/openwrt-package" "lienolpkg" luci-app-kodexplorer
-        git_sparse_clone master "https://github.com/immortalwrt/immortalwrt" "emortalpkg" package/emortal/ipv6-helper \
-        package/emortal/autocore package/emortal/automount package/emortal/autosamba package/emortal/default-settings
+        #git_sparse_clone master "https://github.com/immortalwrt/immortalwrt" "emortalpkg" package/emortal/ipv6-helper \
+        #package/emortal/autocore package/emortal/automount package/emortal/autosamba package/emortal/default-settings
         ) &
     - name: Delete duplicated packages
       run: |
