@@ -40,8 +40,8 @@ function read_config(){
 	[ -z "$serverchan_ipv4" ] && serverchan_ipv4=0
 	[ -z "$serverchan_ipv6" ] && serverchan_ipv6=0
 	[ -z "$sleeptime" ] && sleeptime="60"
-	[ -z "$ip_black_timeout" ] && sleeptime="86400"
-	[ -z "$ip_white_timeout" ] && sleeptime="600"
+	[ -z "$ip_black_timeout" ] && ip_black_timeout="86400"
+	[ -z "$ip_white_timeout" ] && ip_white_timeout="600"
 	[ "$iw_version" ] && wlan_interface=`iw dev 2>/dev/null|grep Interface|awk '{print $2}'` >/dev/null 2>&1
 	[ -z "$up_timeout" ] || [ "$up_timeout" -eq "0" ] && up_timeout="2"
 	[ -z "$down_timeout" ] || [ "$down_timeout" -eq "0" ] && down_timeout="20";down_timeout=`expr ${down_timeout} / 2 + 1`
