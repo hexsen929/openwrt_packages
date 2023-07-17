@@ -63,7 +63,7 @@ jobs:
         rm -rf $1
         }
         (
-        git_clone https://github.com/xiaorouji/openwrt-passwall && mvdir openwrt-passwall
+        # git_clone https://github.com/xiaorouji/openwrt-passwall && mvdir openwrt-passwall
         git_clone https://github.com/fw876/helloworld && mvdir helloworld
         # git_clone https://github.com/riverscn/openwrt-iptvhelper && mvdir openwrt-iptvhelper
         ) &
@@ -71,6 +71,9 @@ jobs:
         git_clone https://github.com/zzsj0928/luci-app-pushbot
         git_clone https://github.com/jerrykuku/luci-theme-argon
         git_clone https://github.com/jerrykuku/luci-app-argon-config
+        git_clone https://github.com/lisaac/luci-app-diskman
+        git_clone https://github.com/msylgj/luci-app-upnp
+        git_clone https://github.com/sirpdboy/luci-app-lucky
         git_clone https://github.com/jerrykuku/luci-app-vssr
         #git_clone https://github.com/sirpdboy/luci-app-ddns-go ddnsgo && mvdir ddnsgo
         git_clone https://github.com/sirpdboy/luci-app-ddns-go
@@ -100,7 +103,7 @@ jobs:
         (
         # git_clone https://github.com/fullcone-nat-nftables/nft-fullcone
         git_clone https://github.com/yichya/openwrt-cloudflared
-        git_clone https://github.com/peter-tank/luci-app-fullconenat
+        # git_clone https://github.com/peter-tank/luci-app-fullconenat
         git_clone https://github.com/sbwml/openwrt-alist && mvdir openwrt-alist
         ) &
         (
