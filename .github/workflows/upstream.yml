@@ -65,56 +65,31 @@ jobs:
         (
         # git_clone https://github.com/xiaorouji/openwrt-passwall && mvdir openwrt-passwall
         git_clone https://github.com/fw876/helloworld && mvdir helloworld
-        # git_clone https://github.com/riverscn/openwrt-iptvhelper && mvdir openwrt-iptvhelper
         ) &
         (
-        git_clone https://github.com/zzsj0928/luci-app-pushbot
         git_clone https://github.com/jerrykuku/luci-theme-argon
         git_clone https://github.com/jerrykuku/luci-app-argon-config
         git_clone https://github.com/lisaac/luci-app-diskman
         git_clone https://github.com/msylgj/luci-app-upnp
         git_clone https://github.com/sirpdboy/luci-app-lucky
+        git_clone https://github.com/sbwml/luci-app-mosdns
         git_clone https://github.com/jerrykuku/luci-app-vssr
-        #git_clone https://github.com/sirpdboy/luci-app-ddns-go ddnsgo && mvdir ddnsgo
-        git_clone https://github.com/sirpdboy/luci-app-ddns-go
-        # git_clone https://github.com/sirpdboy/netspeedtest && mv -n netspeedtest/luci-app-netspeedtest ./ ; rm -rf netspeedtest
         ) &
         (
-        git_clone https://github.com/destan19/OpenAppFilter && mvdir OpenAppFilter
-        git_clone https://github.com/brvphoenix/luci-app-wrtbwmon wrtbwmon1 && mvdir wrtbwmon1
-        git_clone https://github.com/brvphoenix/wrtbwmon wrtbwmon2 && mvdir wrtbwmon2
-        # git_clone https://github.com/gdck/luci-app-cupsd cupsd1 && mv -n cupsd1/luci-app-cupsd cupsd1/cups/cups ./ ; rm -rf cupsd1
-        # git_clone https://github.com/QiuSimons/openwrt-mos && mv -n openwrt-mos/{*mosdns,v2ray-geodata} ./ ; rm -rf openwrt-mos
-        ) &
-        (
-        git_clone https://github.com/zxlhhyccc/luci-app-v2raya
-        git_clone https://github.com/jerrykuku/luci-app-go-aliyundrive-webdav
-        git_clone https://github.com/messense/aliyundrive-webdav aliyundrive && mv -n aliyundrive/openwrt/* ./ ; rm -rf aliyundrive
-        git_clone https://github.com/sbilly/netmaker-openwrt && mv -n netmaker-openwrt/netmaker ./; rm -rf netmaker-openwrt
-        ) &
-        (
-        #git_clone https://github.com/messense/openwrt-wiretrustee && mv -n openwrt-wiretrustee/wiretrustee ./;rm -rf openwrt-wiretrustee
-        git_clone https://github.com/mingxiaoyu/luci-app-cloudflarespeedtest cloudflarespeedtest && mv -n cloudflarespeedtest/applications/* ./;rm -rf cloudflarespeedtest
         git_clone https://github.com/xiaorouji/openwrt-passwall2 passwall2 && mv -n passwall2/luci-app-passwall2 ./;rm -rf passwall2
         git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall passwall && mv -n passwall/luci-app-passwall ./;rm -rf passwall
-        git_clone https://github.com/messense/aliyundrive-fuse aliyundrive && mv -n aliyundrive/openwrt/* ./;rm -rf aliyundrive
-        git_clone https://github.com/AlexZhuo/luci-app-bandwidthd
         ) &
         (
         # git_clone https://github.com/fullcone-nat-nftables/nft-fullcone
-        git_clone https://github.com/yichya/openwrt-cloudflared
-        # git_clone https://github.com/peter-tank/luci-app-fullconenat
-        git_clone https://github.com/sbwml/openwrt-alist && mvdir openwrt-alist
         ) &
         (
-        git_clone https://github.com/tty228/luci-app-serverchan
-        git_clone https://github.com/honwen/luci-app-aliddns
         git_clone https://github.com/sundaqiang/openwrt-packages && mv -n openwrt-packages/luci-* ./; rm -rf openwrt-packages
-        #git_clone https://github.com/vernesong/OpenClash && mv -n OpenClash/luci-app-openclash ./; rm -rf OpenClash
         ) &
         (
-        git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod
-        git_sparse_clone main "https://github.com/Lienol/openwrt-package" "lienolpkg" luci-app-kodexplorer
+        git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod \
+        applications/luci-app-wireguard applications/luci-app-vsftpd applications/luci-app-upnp applications/luci-app-syncdial \
+        applications/luci-app-ramfree applications/luci-app-nfs
+        #git_sparse_clone main "https://github.com/Lienol/openwrt-package" "lienolpkg" luci-app-kodexplorer
         #git_sparse_clone master "https://github.com/immortalwrt/immortalwrt" "emortalpkg" package/emortal/ipv6-helper \
         #package/emortal/autocore package/emortal/automount package/emortal/autosamba package/emortal/default-settings
         ) &
