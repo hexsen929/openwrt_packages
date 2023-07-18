@@ -88,7 +88,7 @@ jobs:
         ) &
         (
         git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod \
-        package/lean/vsftpd-alt
+        package/lean/vsftpd-alt package/lean/ipv6-helper
         git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leanpkg" applications/luci-app-wireguard \
         applications/luci-app-vsftpd applications/luci-app-upnp applications/luci-app-syncdial \
         applications/luci-app-ramfree applications/luci-app-nfs
