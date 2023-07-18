@@ -77,8 +77,8 @@ jobs:
         git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall passwall && mv -n passwall/luci-app-passwall ./;rm -rf passwall
         ) &
         (
-        git_clone https://github.com/msylgj/luci-app-upnp
-        git_clone https://github.com/sirpdboy/luci-app-lucky
+        git_clone https://github.com/msylgj/luci-app-upnp 
+        git_clone https://github.com/sirpdboy/luci-app-lucky lukymv && mv -n lukymv/luci-app-lucky ./ && mv -n lukymv/lucky ./;rm -rf lukymv
         git_clone https://github.com/sbwml/luci-app-mosdns
         # git_clone https://github.com/fullcone-nat-nftables/nft-fullcone
         ) &
@@ -86,9 +86,10 @@ jobs:
         git_clone https://github.com/sundaqiang/openwrt-packages && mv -n openwrt-packages/luci-* ./; rm -rf openwrt-packages
         ) &
         (
-        git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod \
-        applications/luci-app-wireguard applications/luci-app-vsftpd applications/luci-app-upnp applications/luci-app-syncdial \
-        applications/luci-app-ramfree applications/luci-app-nfs
+        git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod
+        git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leanpkg" applications/luci-app-wireguard \
+        applications/luci-app-vsftpd applications/luci-app-upnp applications/luci-app-syncdial \
+        applications/luci-app-ramfree applications/luci-app-nfs \
         # git_sparse_clone main "https://github.com/Lienol/openwrt-package" "lienolpkg" luci-app-kodexplorer
         # git_sparse_clone master "https://github.com/immortalwrt/immortalwrt" "emortalpkg" package/emortal/ipv6-helper \
         # package/emortal/autocore package/emortal/automount package/emortal/autosamba package/emortal/default-settings
