@@ -79,7 +79,7 @@ jobs:
         (
         git_clone https://github.com/msylgj/luci-app-upnp 
         git_clone https://github.com/sirpdboy/luci-app-lucky lukymv && mv -n lukymv/luci-app-lucky ./ && mv -n lukymv/lucky ./;rm -rf lukymv
-        git_clone https://github.com/sbwml/luci-app-mosdns mosdnsmv && mv -n mosdnsmv/luci-app-mosdns ./ && mv -n lukymv/mosdns ./;rm -rf mosdnsmv
+        git_clone https://github.com/sbwml/luci-app-mosdns mosdnsmv && mv -n mosdnsmv/luci-app-mosdns ./ && mv -n lukymv/mosdns lukymv/v2dat ./;rm -rf mosdnsmv
         # git_clone https://github.com/fullcone-nat-nftables/nft-fullcone
         ) &
         (
