@@ -86,10 +86,10 @@ jobs:
         (
         git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod \
         package/lean/vsftpd-alt package/lean/ipv6-helper
+        git_sparse_clone main "https://github.com/Lienol/openwrt-package" "Lienol" luci-app-fileassistant
         git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leanpkg" applications/luci-app-wireguard \
         applications/luci-app-vsftpd applications/luci-app-upnp applications/luci-app-syncdial \
-        applications/luci-app-ramfree applications/luci-app-nfs applications/luci-app-samba4
-        # git_sparse_clone main "https://github.com/Lienol/openwrt-package" "lienolpkg" luci-app-kodexplorer
+        applications/luci-app-ramfree applications/luci-app-nfs applications/luci-app-samba4 applications/luci-app-webadmin
         # git_sparse_clone master "https://github.com/immortalwrt/immortalwrt" "emortalpkg" package/emortal/ipv6-helper \
         # package/emortal/autocore package/emortal/automount package/emortal/autosamba package/emortal/default-settings
         ) &
