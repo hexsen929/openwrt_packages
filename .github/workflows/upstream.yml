@@ -63,7 +63,7 @@ jobs:
         rm -rf $1
         }
         (
-        # git_clone https://github.com/xiaorouji/openwrt-passwall && mvdir openwrt-passwall
+        git_clone https://github.com/xiaorouji/openwrt-passwall
         git_clone https://github.com/fw876/helloworld && mvdir helloworld
         ) &
         (
@@ -82,9 +82,6 @@ jobs:
         git_clone https://github.com/sbwml/luci-app-mosdns mosdnsmv && mv -n mosdnsmv/luci-app-mosdns ./ && mv -n mosdnsmv/mosdns mosdnsmv/v2dat ./;rm -rf mosdnsmv
         git_clone https://github.com/chenmozhijin/luci-app-socat && mv luci-app-socat/luci-app-socat ./;rm -rf luci-app-socat
         # git_clone https://github.com/fullcone-nat-nftables/nft-fullcone
-        ) &
-        (
-        git_clone https://github.com/sundaqiang/openwrt-packages && mv -n openwrt-packages/luci-* ./; rm -rf openwrt-packages
         ) &
         (
         git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod \
