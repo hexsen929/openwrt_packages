@@ -70,7 +70,7 @@ jobs:
         git_clone https://github.com/jerrykuku/luci-theme-argon
         git_clone https://github.com/jerrykuku/luci-app-argon-config
         git_clone https://github.com/lisaac/luci-app-diskman
-        git_clone https://github.com/jerrykuku/luci-app-vssr
+        # git_clone https://github.com/jerrykuku/luci-app-vssr
         ) &
         (
         git_clone https://github.com/xiaorouji/openwrt-passwall2 passwall2 && mv -n passwall2/luci-app-passwall2 ./;rm -rf passwall2
