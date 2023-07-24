@@ -77,7 +77,7 @@ jobs:
         git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall passwall && mv -n passwall/luci-app-passwall ./;rm -rf passwall
         ) &
         (
-        git_clone https://github.com/msylgj/luci-app-upnp 
+        # git_clone https://github.com/msylgj/luci-app-upnp 
         git_clone https://github.com/sirpdboy/luci-app-lucky lukymv && mv -n lukymv/luci-app-lucky ./ && mv -n lukymv/lucky ./;rm -rf lukymv
         git_clone https://github.com/sbwml/luci-app-mosdns mosdnsmv && mv -n mosdnsmv/luci-app-mosdns ./ && mv -n mosdnsmv/mosdns mosdnsmv/v2dat ./;rm -rf mosdnsmv
         git_clone https://github.com/chenmozhijin/luci-app-socat && mv luci-app-socat/luci-app-socat ./;rm -rf luci-app-socat
@@ -87,11 +87,9 @@ jobs:
         git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod \
         package/lean/vsftpd-alt package/lean/ipv6-helper
         git_sparse_clone main "https://github.com/Lienol/openwrt-package" "Lienol" luci-app-fileassistant
-        git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leanpkg" applications/luci-app-wireguard \
-        applications/luci-app-vsftpd applications/luci-app-upnp applications/luci-app-syncdial \
-        applications/luci-app-ramfree applications/luci-app-nfs applications/luci-app-samba4 applications/luci-app-webadmin
-        # git_sparse_clone master "https://github.com/immortalwrt/immortalwrt" "emortalpkg" package/emortal/ipv6-helper \
-        # package/emortal/autocore package/emortal/automount package/emortal/autosamba package/emortal/default-settings
+        git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leanpkg" applications/luci-app-wireguard 
+        git_sparse_clone openwrt-23.05 "https://github.com/immortalwrt/luci" "emortalapp" applications/luci-app-upnp applications/luci-app-syncdial \
+        applications/luci-app-vsftpd applications/luci-app-webadmin applications/luci-app-samba4 applications/luci-app-ramfree applications/luci-app-nfs
         ) &
     - name: Replace text in files
       run: sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' $(find ./ -type f -name "Makefile")
