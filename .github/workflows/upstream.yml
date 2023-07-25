@@ -86,11 +86,11 @@ jobs:
         (
         git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod \
         package/lean/vsftpd-alt package/lean/ipv6-helper
+        git_sparse_clone main "https://github.com/Lienol/openwrt-package" "Lienol" luci-app-fileassistant
         git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leanpkg" applications/luci-app-wireguard applications/luci-app-vsftpd
         git_sparse_clone openwrt-23.05 "https://github.com/immortalwrt/luci" "emortalapp" applications/luci-app-upnp applications/luci-app-syncdial \
         applications/luci-app-webadmin applications/luci-app-samba4 applications/luci-app-ramfree applications/luci-app-nfs
-        git_sparse_clone main "https://github.com/Lienol/openwrt-package" "Lienol" luci-app-fileassistant
-        git_sparse_clone openwrt-23.05 "https://github.com/immortalwrt/luci" "emortalapkg" package/net/miniupnpd package/net/miniupnpc
+        git_sparse_clone openwrt-23.05 "https://github.com/immortalwrt/packages" "emortalapkg" package/net/miniupnpd package/net/miniupnpc
         ) &
     - name: Replace text in files
       run: sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' $(find ./ -type f -name "Makefile")
