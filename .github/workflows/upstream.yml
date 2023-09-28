@@ -73,6 +73,7 @@ jobs:
         # git_clone https://github.com/jerrykuku/luci-app-vssr
         ) &
         (
+        git_clone https://github.com/xiaorouji/openwrt-passwall-packages.git
         git_clone https://github.com/xiaorouji/openwrt-passwall2 passwall2 && mv -n passwall2/luci-app-passwall2 ./;rm -rf passwall2
         git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall passwall && mv -n passwall/luci-app-passwall ./;rm -rf passwall
         ) &
