@@ -69,7 +69,7 @@ jobs:
         (
         git_clone https://github.com/jerrykuku/luci-theme-argon
         git_clone https://github.com/jerrykuku/luci-app-argon-config
-        git_clone https://github.com/lisaac/luci-app-diskman
+        git_clone https://github.com/lisaac/luci-app-diskman diskmannm && mv diskmannm/applications/* ./ && rm -rf diskmannm
         ) &
         (
         git_clone https://github.com/xiaorouji/openwrt-passwall-packages && mv openwrt-passwall-packages/* ./ && rm -rf openwrt-passwall-packages
