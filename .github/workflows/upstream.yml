@@ -90,7 +90,8 @@ jobs:
         git_sparse_clone main "https://github.com/Lienol/openwrt-package" "Lienol" luci-app-fileassistant
         git_sparse_clone openwrt-23.05 https://github.com/immortalwrt/luci.git "immortal" applications/luci-app-upnp \
         applications/luci-app-webadmin applications/luci-app-samba4 applications/luci-app-ramfree applications/luci-app-nfs
-        git_sparse_clone openwrt-23.05 "https://github.com/immortalwrt/packages.git" "immortalpkg" net/miniupnpd net/miniupnpc
+        git_sparse_clone openwrt-23.05 "https://github.com/immortalwrt/packages.git" "immortalpkg" net/miniupnpd \
+        net/miniupnpc
         ) &
     - name: Replace text in files
       run: sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' $(find ./ -type f -name "Makefile")
