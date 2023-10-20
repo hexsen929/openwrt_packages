@@ -85,12 +85,9 @@ jobs:
         # git_clone https://github.com/fullcone-nat-nftables/nft-fullcone
         ) &
         (
-        # git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod \
-        package/lean/vsftpd-alt package/lean/ipv6-helper
         git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod \
-        package/lean/ipv6-helper
-        # git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leanpkg" applications/luci-app-wireguard applications/luci-app-vsftpd
-        git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leanpkg" applications/luci-app-wireguard
+        package/lean/vsftpd-alt package/lean/ipv6-helper
+        git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leanpkg" applications/luci-app-wireguard applications/luci-app-vsftpd
         ) &
         (
         git_sparse_clone main "https://github.com/Lienol/openwrt-package" "Lienol" luci-app-fileassistant
