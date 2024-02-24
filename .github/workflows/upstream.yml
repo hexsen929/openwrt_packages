@@ -77,7 +77,7 @@ jobs:
         git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall passwall && mv -n passwall/luci-app-passwall ./;rm -rf passwall
         ) &
         (
-        git_clone https://github.com/sirpdboy/luci-app-lucky lukymv && mv -n lukymv/luci-app-lucky ./ && mv -n lukymv/lucky ./;rm -rf lukymv
+        git_clone https://github.com/gdy666/luci-app-lucky lukymv && mv -n lukymv/luci-app-lucky ./ && mv -n lukymv/lucky ./;rm -rf lukymv
         git_clone https://github.com/sbwml/luci-app-mosdns mosdnsmv && mv -n mosdnsmv/luci-app-mosdns ./ && mv -n mosdnsmv/mosdns mosdnsmv/v2dat ./;rm -rf mosdnsmv
         git_clone https://github.com/chenmozhijin/luci-app-socat && mv luci-app-socat/luci-app-socat ./;rm -rf luci-app-socat
         ) &
