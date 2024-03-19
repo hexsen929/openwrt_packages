@@ -89,7 +89,7 @@ jobs:
         (
         git_sparse_clone main "https://github.com/Lienol/openwrt-package" "Lienol" luci-app-fileassistant
         git_sparse_clone openwrt-23.05 https://github.com/immortalwrt/luci.git "immortal" applications/luci-app-webadmin \
-        applications/luci-app-samba4 applications/luci-app-ramfree applications/luci-app-nfs
+        applications/luci-app-samba4 applications/luci-app-ramfree applications/luci-app-nfs applications/luci-app-zerotier
         # git_sparse_clone openwrt-23.05 "https://github.com/immortalwrt/packages.git" "immortalpkg" net/miniupnpd \
         net/miniupnpc
         ) &
