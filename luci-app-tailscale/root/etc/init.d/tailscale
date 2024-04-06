@@ -88,7 +88,7 @@ custom_instance() {
 				uci set firewall.tszone='zone'
 				uci set firewall.tszone.input='ACCEPT'
 				uci set firewall.tszone.output='ACCEPT'
-				uci set firewall.tszone.forward='REJECT'
+				uci set firewall.tszone.forward='ACCEPT'
 				uci set firewall.tszone.masq='1'
 				uci set firewall.tszone.name='tailscale'
 				uci set firewall.tszone.network='tailscale'
