@@ -5,7 +5,9 @@
  */
 
 'use strict';
+'require dom';
 'require fs';
+'require poll';
 'require ui';
 'require view';
 
@@ -68,12 +70,17 @@ return view.extend({
 		});
 	},
 
-	render: function(data) {
-		var title = E('h2', {class: 'content'}, _('Tailscale'));
-		var desc = E('div', {class: 'cbi-map-descr'}, _('Tailscale is a cross-platform and easy to use virtual LAN.'));
+	pollData: function (container) {
+		poll.add(L.bind(function () {
+			return this.load().then(L.bind(function (data) {
+				dom.content(container, this.renderContent(data));
+			}, this));
+		}, this));
+	},
 
+	renderContent: function (data) {
 		if (!Array.isArray(data)) {
-			return E('div', {}, [title, desc, E('div', {}, _('No interface online.'))]);
+			return E('div', {}, _('No interface online.'));
 		}
 		var rows = data.flatMap(function(interfaceData) {
 			return [
@@ -105,7 +112,21 @@ return view.extend({
 			];
 		});
 
-		return E('div', {}, [title, desc, E('table', { 'class': 'table' }, rows)]);
+		return E('table', { 'class': 'table' }, rows);
+	},
+
+	render: function(data) {
+		var content = E([], [
+			E('h2', {class: 'content'}, _('Tailscale')),
+			E('div', {class: 'cbi-map-descr'}, _('Tailscale is a cross-platform and easy to use virtual LAN.')),
+			E('div')
+		]);
+		var container = content.lastElementChild;
+
+		dom.content(container, this.renderContent(data));
+		this.pollData(container);
+
+		return content;
 	},
 
 	handleSaveApply: null,
