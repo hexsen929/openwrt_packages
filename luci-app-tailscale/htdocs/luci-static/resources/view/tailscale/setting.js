@@ -18,6 +18,10 @@ var callServiceList = rpc.declare({
 	expect: { '': {} }
 });
 
+function enquoteBigNumber(str) {
+	return str.replace(/("\w+"):\s*(\d+)/g, '$1:"$2"');
+}
+
 function getStatus() {
 	var status = {};
 	return Promise.resolve(callServiceList('tailscale')).then(function (res) {
@@ -28,7 +32,7 @@ function getStatus() {
 		}
 		return fs.exec("/usr/sbin/tailscale", ["status", "--json"]);
 	}).then(function(res) {
-		var tailscaleStatus = JSON.parse(res.stdout);
+		var tailscaleStatus = JSON.parse(enquoteBigNumber(res.stdout));
 		if (!tailscaleStatus.AuthURL && tailscaleStatus.BackendState == "NeedsLogin") {
 			fs.exec("/usr/sbin/tailscale", ["login"]);
 		}
@@ -91,7 +95,7 @@ return view.extend({
 				return Promise.resolve(getStatus()).then(function(res) {
 					var service_view = document.getElementById("service_status");
 					var login_view = document.getElementById("login_status_div");
-					service_view.innerHTML = renderStatus(res.isRunning);	
+					service_view.innerHTML = renderStatus(res.isRunning);
 					login_view.innerHTML = renderLogin(res.backendState, res.authURL, res.displayName);
 					var logoutButton = document.getElementById('logout_button');
 					if (logoutButton) {
@@ -103,7 +107,7 @@ return view.extend({
 					}
 				});
 			});
-	
+
 			return E('div', { class: 'cbi-section', id: 'status_bar' }, [
 					E('p', { id: 'service_status' }, _('Collecting data ...'))
 			]);
