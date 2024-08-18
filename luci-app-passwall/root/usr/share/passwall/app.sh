@@ -543,8 +543,8 @@ run_chinadns_ng() {
 		local vpslist4_set="passwall_vpslist"
 		local vpslist6_set="passwall_vpslist6"
 		[ "$nftflag" = "1" ] && {
-			vpslist4_set="inet@fw4@${vpslist4_set}"
-			vpslist6_set="inet@fw4@${vpslist6_set}"
+			vpslist4_set="inet@passwall@${vpslist4_set}"
+			vpslist6_set="inet@passwall@${vpslist6_set}"
 		}
 		cat <<-EOF >> ${_CONF_FILE}
 			group vpslist
@@ -558,8 +558,8 @@ run_chinadns_ng() {
 		local whitelist4_set="passwall_whitelist"
 		local whitelist6_set="passwall_whitelist6"
 		[ "$nftflag" = "1" ] && {
-			whitelist4_set="inet@fw4@${whitelist4_set}"
-			whitelist6_set="inet@fw4@${whitelist6_set}"
+			whitelist4_set="inet@passwall@${whitelist4_set}"
+			whitelist6_set="inet@passwall@${whitelist6_set}"
 		}
 		cat <<-EOF >> ${_CONF_FILE}
 			group directlist
@@ -573,8 +573,8 @@ run_chinadns_ng() {
 		local blacklist4_set="passwall_blacklist"
 		local blacklist6_set="passwall_blacklist6"
 		[ "$nftflag" = "1" ] && {
-			blacklist4_set="inet@fw4@${blacklist4_set}"
-			blacklist6_set="inet@fw4@${blacklist6_set}"
+			blacklist4_set="inet@passwall@${blacklist4_set}"
+			blacklist6_set="inet@passwall@${blacklist6_set}"
 		}
 		cat <<-EOF >> ${_CONF_FILE}
 			group proxylist
@@ -589,8 +589,8 @@ run_chinadns_ng() {
 		local gfwlist4_set="passwall_gfwlist"
 		local gfwlist6_set="passwall_gfwlist6"
 		[ "$nftflag" = "1" ] && {
-			gfwlist4_set="inet@fw4@${gfwlist4_set}"
-			gfwlist6_set="inet@fw4@${gfwlist6_set}"
+			gfwlist4_set="inet@passwall@${gfwlist4_set}"
+			gfwlist6_set="inet@passwall@${gfwlist6_set}"
 		}
 		cat <<-EOF >> ${_CONF_FILE}
 			gfwlist-file ${RULES_PATH}/gfwlist
@@ -603,8 +603,8 @@ run_chinadns_ng() {
 		local chnroute4_set="passwall_chnroute"
 		local chnroute6_set="passwall_chnroute6"
 		[ "$nftflag" = "1" ] && {
-			chnroute4_set="inet@fw4@${chnroute4_set}"
-			chnroute6_set="inet@fw4@${chnroute6_set}"
+			chnroute4_set="inet@passwall@${chnroute4_set}"
+			chnroute6_set="inet@passwall@${chnroute6_set}"
 		}
 
 		[ "${_chnlist}" = "direct" ] && {
@@ -1406,6 +1406,33 @@ start_dns() {
 	TUN_DNS="127.0.0.1#${dns_listen_port}"
 	[ "${resolve_dns}" == "1" ] && TUN_DNS="127.0.0.1#${resolve_dns_port}"
 
+	[ "${DNS_SHUNT}" = "smartdns" ] && {
+		if command -v smartdns > /dev/null 2>&1; then
+			rm -rf $TMP_PATH2/dnsmasq_default*
+			local group_domestic=$(config_t_get global group_domestic)
+			local smartdns_remote_dns=$(config_t_get global smartdns_remote_dns)
+			if [ -n "${smartdns_remote_dns}" -a "${smartdns_remote_dns}" != "nil" ]; then
+				smartdns_remote_dns=$(echo ${smartdns_remote_dns} | tr -s ' ' '|')
+			else
+				smartdns_remote_dns="tcp://1.1.1.1"
+			fi
+			local smartdns_exclude_default_group=$(config_t_get global smartdns_exclude_default_group 0)
+			lua $APP_PATH/helper_smartdns_add.lua -FLAG "default" -SMARTDNS_CONF "/tmp/etc/smartdns/$CONFIG.conf" \
+				-LOCAL_GROUP ${group_domestic:-nil} -REMOTE_GROUP "passwall_proxy" -REMOTE_PROXY_SERVER ${TCP_SOCKS_server} -REMOTE_EXCLUDE "${smartdns_exclude_default_group}" \
+				-TUN_DNS ${smartdns_remote_dns} \
+				-USE_DIRECT_LIST "${USE_DIRECT_LIST}" -USE_PROXY_LIST "${USE_PROXY_LIST}" -USE_BLOCK_LIST "${USE_BLOCK_LIST}" -USE_GFW_LIST "${USE_GFW_LIST}" -CHN_LIST "${CHN_LIST}" \
+				-TCP_NODE ${TCP_NODE} -DEFAULT_PROXY_MODE "${TCP_PROXY_MODE}" -NO_PROXY_IPV6 ${FILTER_PROXY_IPV6:-0} -NFTFLAG ${nftflag:-0} \
+				-NO_LOGIC_LOG ${NO_LOGIC_LOG:-0}
+			source $APP_PATH/helper_smartdns.sh restart
+			echolog "  - 域名解析：使用SmartDNS，请确保配置正常。"
+			return
+		else
+			DNS_SHUNT="dnsmasq"
+			echolog "  * 未安装SmartDNS，默认使用Dnsmasq进行域名解析！"
+		fi
+	}
+	rm -rf $TMP_PATH2/smartdns_default*
+
 	case "$DNS_MODE" in
 	dns2socks)
 		local dns2socks_socks_server=$(echo $(config_t_get global socks_server 127.0.0.1:1080) | sed "s/#/:/g")
@@ -1925,6 +1952,7 @@ stop() {
 	unset V2RAY_LOCATION_ASSET
 	unset XRAY_LOCATION_ASSET
 	stop_crontab
+	source $APP_PATH/helper_smartdns.sh del
 	source $APP_PATH/helper_dnsmasq.sh del
 	source $APP_PATH/helper_dnsmasq.sh restart no_log=1
 	[ -s "$TMP_PATH/bridge_nf_ipt" ] && sysctl -w net.bridge.bridge-nf-call-iptables=$(cat $TMP_PATH/bridge_nf_ipt) >/dev/null 2>&1
