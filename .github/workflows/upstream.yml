@@ -63,7 +63,7 @@ jobs:
         rm -rf $1
         }
         (
-        git_clone https://github.com/xiaorouji/openwrt-passwall && mvdir openwrt-passwall
+        # git_clone https://github.com/xiaorouji/openwrt-passwall && mvdir openwrt-passwall
         git_clone https://github.com/fw876/helloworld && mvdir helloworld
         ) &
         (
