@@ -29,7 +29,7 @@ msgstr "參數列表"
 
 #: luci-app-tailscale/htdocs/luci-static/resources/view/tailscale/setting.js:148
 msgid "Advanced Settings"
-msgstr "高級選項"
+msgstr "高級設置"
 
 #: luci-app-tailscale/htdocs/luci-static/resources/view/tailscale/setting.js:99
 msgid "Are you sure you want to logout and unbind the current device?"
@@ -40,8 +40,8 @@ msgid "Auth Key"
 msgstr "認證密鑰"
 
 #: luci-app-tailscale/htdocs/luci-static/resources/view/tailscale/setting.js:150
-msgid "Auto Mesh"
-msgstr "自動組網"
+msgid "Accept Routes"
+msgstr "啟用路由"
 
 #: luci-app-tailscale/htdocs/luci-static/resources/view/tailscale/setting.js:185
 msgid "Available flags"
@@ -49,7 +49,7 @@ msgstr "可用參數"
 
 #: luci-app-tailscale/htdocs/luci-static/resources/view/tailscale/setting.js:113
 msgid "Basic Settings"
-msgstr "基礎選項"
+msgstr "基礎設置"
 
 #: luci-app-tailscale/htdocs/luci-static/resources/view/tailscale/setting.js:108
 #: luci-app-tailscale/htdocs/luci-static/resources/view/tailscale/setting.js:122
@@ -82,7 +82,7 @@ msgstr "廣播子網路由至 Tailscale，例如：<code>10.0.0.0/24</code>。"
 
 #: luci-app-tailscale/htdocs/luci-static/resources/view/tailscale/setting.js:183
 msgid "Extra Settings"
-msgstr "附加選項"
+msgstr "附加設置"
 
 #: luci-app-tailscale/htdocs/luci-static/resources/view/tailscale/setting.js:134
 msgid "Firewall Mode"

@@ -45,7 +45,7 @@ custom_instance() {
 	[ "$acceptDNS" = "0" ] && ARGS="$ARGS --accept-dns=false"
 	[ "$advertiseExitNode" = "1" ] && ARGS="$ARGS --advertise-exit-node"
 	[ -n "$advertiseRoutes" ] && ARGS="$ARGS --advertise-routes=$advertiseRoutes"
-	[ "$s2s" = "1" ] && ARGS="$ARGS --snat-subnet-routes=false --stateful-filtering=false"
+	[ "$s2s" = "1" ] && ARGS="$ARGS --snat-subnet-routes=false"
 	[ -n "$flags" ] && ARGS="$ARGS $flags"
 	[ -n "$loginServer" ] && ARGS="$ARGS --login-server=$loginServer"
 	[ -n "$authkey" ] && ARGS="$ARGS --authkey=$authkey"
@@ -86,8 +86,8 @@ custom_instance() {
 			fi
 		fi
 
-		config_get_bool acceptRoutes $cfg 'acceptRoutes'
-		if [ "$acceptRoutes" == "1" ];  then
+		config_get access $cfg 'access'
+		if [ -n "$access" ];  then
 			if [ -z "$(uci -q get firewall.tszone)" ];  then
 				uci set firewall.tszone='zone'
 				uci set firewall.tszone.input='ACCEPT'
@@ -101,7 +101,6 @@ custom_instance() {
 			uci -q delete firewall.tszone
 		fi
 
-		config_get access $cfg 'access'
 		if [ "${access//tsfwlan/}" != "$access" ]; then
 			uci set firewall.tsfwlan=forwarding
 			uci set firewall.tsfwlan.dest='lan'

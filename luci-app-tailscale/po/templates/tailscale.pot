@@ -34,7 +34,7 @@ msgid "Auth Key"
 msgstr ""
 
 #: luci-app-tailscale/htdocs/luci-static/resources/view/tailscale/setting.js:150
-msgid "Auto Mesh"
+msgid "Accept Routes"
 msgstr ""
 
 #: luci-app-tailscale/htdocs/luci-static/resources/view/tailscale/setting.js:185

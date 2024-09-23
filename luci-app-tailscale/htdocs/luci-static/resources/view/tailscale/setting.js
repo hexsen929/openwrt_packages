@@ -151,7 +151,7 @@ return view.extend({
 
 		s.tab('advance',_('Advanced Settings'));
 
-		o = s.taboption('advance',form.Flag, 'acceptRoutes', _('Auto Mesh'), _('Accept subnet routes that other nodes advertise.'));
+		o = s.taboption('advance',form.Flag, 'acceptRoutes', _('Accept Routes'), _('Accept subnet routes that other nodes advertise.'));
 		o.default = o.disabled;
 		o.rmempty = false;
 
