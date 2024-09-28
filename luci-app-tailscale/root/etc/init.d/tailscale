@@ -44,7 +44,7 @@ custom_instance() {
 	[ -n "$hostname" ] && ARGS="$ARGS --hostname=$hostname"
 	[ "$acceptDNS" = "0" ] && ARGS="$ARGS --accept-dns=false"
 	[ "$advertiseExitNode" = "1" ] && ARGS="$ARGS --advertise-exit-node"
-	[ -n "$advertiseRoutes" ] && ARGS="$ARGS --advertise-routes=$advertiseRoutes"
+	[ -n "$advertiseRoutes" ] && ARGS="$ARGS --advertise-routes=$(echo $advertiseRoutes | tr ' ' ',')"
 	[ "$s2s" = "1" ] && ARGS="$ARGS --snat-subnet-routes=false"
 	[ -n "$flags" ] && ARGS="$ARGS $flags"
 	[ -n "$loginServer" ] && ARGS="$ARGS --login-server=$loginServer"
@@ -86,6 +86,23 @@ custom_instance() {
 			fi
 		fi
 
+		config_get subnetRoutes $cfg 'subnetRoutes'
+		if [ -n "$subnetRoutes" ];  then
+			i=1
+			lan_ip=$(uci get network.lan.ipaddr)
+			for route in $subnetRoutes; do
+				uci set network.ts_subnet$i='route'
+				uci set network.ts_subnet$i.interface='lan'
+				uci set network.ts_subnet$i.target=$route
+				uci set network.ts_subnet$i.gateway=$lan_ip
+				let i++
+			done
+		else
+			for route in $(uci show network | grep 'network\.ts_subnet[0-9]*\+=route' | grep -o 'network\.ts_subnet[0-9]*'); do
+				uci -q delete $route
+			done
+		fi
+
 		config_get access $cfg 'access'
 		if [ -n "$access" ];  then
 			if [ -z "$(uci -q get firewall.tszone)" ];  then
@@ -100,7 +117,6 @@ custom_instance() {
 		else
 			uci -q delete firewall.tszone
 		fi
-
 		if [ "${access//tsfwlan/}" != "$access" ]; then
 			uci set firewall.tsfwlan=forwarding
 			uci set firewall.tsfwlan.dest='lan'
@@ -185,6 +201,9 @@ stop_instance() {
 	# Remove network settings
 	uci -q delete network.tailscale
 	uci -q delete network.ts_lan
+	for route in $(uci show network | grep 'network\.ts_subnet[0-9]*\+=route' | grep -o 'network\.ts_subnet[0-9]*'); do
+		uci -q delete $route
+	done
 	
 	# Remove firewall settings
 	uci -q delete firewall.tszone
