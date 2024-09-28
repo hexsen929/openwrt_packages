@@ -65,6 +65,14 @@ custom_instance() {
 			let count++
 			[ "${count}" -ge 5 ] && { rm /var/run/tailscale.wait.pid; exit 19; }
 		done
+
+		if [ "$acceptDNS" = "1" ]; then
+			MagicDNSSuffix=$(tailscale status --json | awk -F'"' '/"MagicDNSSuffix"/ {last=$(NF-1)} END {print last}')
+			sed -i '/100.100.100.100/d' /etc/dnsmasq.conf
+			echo "server=/$MagicDNSSuffix/100.100.100.100" >> /etc/dnsmasq.conf
+			/etc/init.d/dnsmasq restart
+		fi
+
 		ts0=$(ifconfig | grep 'tailscale' | awk '{print $1}')
 		if [ -z "$(uci -q get network.tailscale)" ];  then				
 			uci set network.tailscale='interface'
@@ -109,8 +117,9 @@ custom_instance() {
 				uci set firewall.tszone='zone'
 				uci set firewall.tszone.input='ACCEPT'
 				uci set firewall.tszone.output='ACCEPT'
-				uci set firewall.tszone.forward='REJECT'
+				uci set firewall.tszone.forward='ACCEPT'
 				uci set firewall.tszone.masq='1'
+				uci set firewall.tszone.mtu_fix='1'
 				uci set firewall.tszone.name='tailscale'
 				uci set firewall.tszone.network='tailscale'
 			fi
@@ -198,6 +207,10 @@ stop_instance() {
 	local cfg="$1"
 	/usr/sbin/tailscaled --cleanup
 
+	# Remove dnsmasq settings
+	sed -i '/100.100.100.100/d' /etc/dnsmasq.conf
+	/etc/init.d/dnsmasq restart
+	
 	# Remove network settings
 	uci -q delete network.tailscale
 	uci -q delete network.ts_lan
