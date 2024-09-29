@@ -20,7 +20,7 @@ section_enabled() {
 
 custom_instance() {
 	local cfg="$1"
-	local acceptRoutes hostname acceptDNS advertiseExitNode advertiseRoutes s2s flags loginServer authkey std_out std_err
+	local acceptRoutes hostname acceptDNS advertiseExitNode exitNode advertiseRoutes s2s subnetRoutes flags loginServer authkey std_out std_err
 	local ARGS=" up --reset"
 
 	if ! section_enabled "$cfg"; then
@@ -32,6 +32,7 @@ custom_instance() {
 	config_get hostname $cfg 'hostname'
 	config_get_bool acceptDNS $cfg 'acceptDNS'
 	config_get_bool advertiseExitNode $cfg 'advertiseExitNode'
+	config_get exitNode $cfg 'exitNode'
 	config_get advertiseRoutes $cfg 'advertiseRoutes'
 	config_get_bool s2s $cfg 's2s'
 	config_get flags $cfg 'flags'
@@ -44,6 +45,7 @@ custom_instance() {
 	[ -n "$hostname" ] && ARGS="$ARGS --hostname=$hostname"
 	[ "$acceptDNS" = "0" ] && ARGS="$ARGS --accept-dns=false"
 	[ "$advertiseExitNode" = "1" ] && ARGS="$ARGS --advertise-exit-node"
+	[ -n "$exitNode" ] && ARGS="$ARGS --exit-node=$exitNode --exit-node-allow-lan-access=true"
 	[ -n "$advertiseRoutes" ] && ARGS="$ARGS --advertise-routes=$(echo $advertiseRoutes | tr ' ' ',')"
 	[ "$s2s" = "1" ] && ARGS="$ARGS --snat-subnet-routes=false"
 	[ -n "$flags" ] && ARGS="$ARGS $flags"
@@ -70,7 +72,7 @@ custom_instance() {
 			MagicDNSSuffix=$(tailscale status --json | awk -F'"' '/"MagicDNSSuffix"/ {last=$(NF-1)} END {print last}')
 			sed -i '/100.100.100.100/d' /etc/dnsmasq.conf
 			echo "server=/$MagicDNSSuffix/100.100.100.100" >> /etc/dnsmasq.conf
-			/etc/init.d/dnsmasq restart
+			/etc/init.d/dnsmasq reload
 		fi
 
 		ts0=$(ifconfig | grep 'tailscale' | awk '{print $1}')
@@ -94,6 +96,14 @@ custom_instance() {
 			fi
 		fi
 
+		lan2wan=$(uci show firewall | grep "firewall.@forwarding\[[0-9]\+\]\.src='lan'" -B 1 -A 1 | grep "firewall.@forwarding\[[0-9]\+\]\.dest='wan'" | grep -o '[0-9]\+')
+		if [ -n "$exitNode" ];  then
+			uci set firewall.@defaults[0].forward='REJECT'
+			[ -n $lan2wan ] && uci set firewall.@forwarding[$lan2wan].enabled='0'
+		else
+			uci -q delete firewall.@forwarding[$lan2wan].enabled
+		fi
+
 		config_get subnetRoutes $cfg 'subnetRoutes'
 		if [ -n "$subnetRoutes" ];  then
 			i=1
@@ -106,7 +116,7 @@ custom_instance() {
 				let i++
 			done
 		else
-			for route in $(uci show network | grep 'network\.ts_subnet[0-9]*\+=route' | grep -o 'network\.ts_subnet[0-9]*'); do
+			for route in $(uci show network | grep 'network.ts_subnet[0-9]\+=route' | grep -o 'network.ts_subnet[0-9]\+'); do
 				uci -q delete $route
 			done
 		fi
@@ -209,16 +219,18 @@ stop_instance() {
 
 	# Remove dnsmasq settings
 	sed -i '/100.100.100.100/d' /etc/dnsmasq.conf
-	/etc/init.d/dnsmasq restart
+	/etc/init.d/dnsmasq reload
 	
 	# Remove network settings
 	uci -q delete network.tailscale
 	uci -q delete network.ts_lan
-	for route in $(uci show network | grep 'network\.ts_subnet[0-9]*\+=route' | grep -o 'network\.ts_subnet[0-9]*'); do
+	for route in $(uci show network | grep 'network.ts_subnet[0-9]\+=route' | grep -o 'network.ts_subnet[0-9]\+'); do
 		uci -q delete $route
 	done
 	
 	# Remove firewall settings
+	lan2wan=$(uci show firewall | grep "firewall.@forwarding\[[0-9]\+\]\.src='lan'" -B 1 -A 1 | grep "firewall.@forwarding\[[0-9]\+\]\.dest='wan'" | grep -o '[0-9]\+')
+	uci -q delete firewall.@forwarding[$lan2wan].enabled
 	uci -q delete firewall.tszone
 	uci -q delete firewall.tsfwlan
 	uci -q delete firewall.tsfwwan

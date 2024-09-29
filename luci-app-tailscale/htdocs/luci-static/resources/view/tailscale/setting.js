@@ -24,7 +24,8 @@ function getStatus() {
 		backendState: undefined,
 		authURL: undefined,
 		displayName: undefined,
-		routes: []
+		onlineExitNodes: [],
+		subnetRoutes: []
 	};
 	return Promise.resolve(callServiceList('tailscale')).then(res => {
 		try {
@@ -40,7 +41,9 @@ function getStatus() {
 			status.backendState = tailscaleStatus.BackendState;
 			status.authURL = tailscaleStatus.AuthURL;
 			status.displayName = (status.backendState === "Running") ? 	tailscaleStatus.User[tailscaleStatus.Self.UserID].DisplayName : undefined;
-			status.routes = Object.values(tailscaleStatus.Peer)
+			status.onlineExitNodes = Object.values(tailscaleStatus.Peer)
+				.flatMap(peer => (peer.ExitNodeOption && peer.Online) ? [peer.HostName] : []);
+			status.subnetRoutes = Object.values(tailscaleStatus.Peer)
 				.flatMap(peer => peer.PrimaryRoutes || []);
 			return status;
 		});
@@ -85,7 +88,8 @@ return view.extend({
 	render: function(data) {
 		var m, s, o;
 		var statusData = data[1];
-		var routes = statusData.routes;
+		var onlineExitNodes = statusData.onlineExitNodes;
+		var subnetRoutes = statusData.subnetRoutes;
 
 		m = new form.Map('tailscale', _('Tailscale'), _('Tailscale is a cross-platform and easy to use virtual LAN.'));
 
@@ -168,6 +172,20 @@ return view.extend({
 		o.default = o.disabled;
 		o.rmempty = false;
 
+		o = s.taboption('advance', form.ListValue, 'exitNode', _('Online Exit Nodes'), _('Select an online machine name to use as an exit node.'));
+		if (onlineExitNodes.length > 0) {
+			o.value('', _('-- Please choose --'));
+			onlineExitNodes.forEach(function(node) {
+				o.value(node, node);
+			});
+		} else {
+			o.value('', _('No Available Exit Nodes'));
+			o.readonly = true;
+		}
+		o.default = '';
+		o.depends('advertiseExitNode', '0');
+		o.rmempty = true;
+
 		o = s.taboption('advance', form.DynamicList, 'advertiseRoutes', _('Expose Subnets'), _('Expose physical network routes into Tailscale, e.g. <code>10.0.0.0/24</code>.'));
 		o.default = '';
 		o.rmempty = true;
@@ -178,8 +196,8 @@ return view.extend({
 		o.rmempty = false;
 
 		o = s.taboption('advance', form.DynamicList, 'subnetRoutes', _('Subnet Routes'), _('Select subnet routes advertised by other nodes in Tailscale network.'));
-		if (routes.length > 0) {
-			routes.forEach(function(route) {
+		if (subnetRoutes.length > 0) {
+			subnetRoutes.forEach(function(route) {
 				o.value(route, route);
 			});
 		} else {
