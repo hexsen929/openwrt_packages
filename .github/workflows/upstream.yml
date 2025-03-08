@@ -83,6 +83,7 @@ jobs:
         git_clone https://github.com/chenmozhijin/luci-app-socat && mv luci-app-socat/luci-app-socat ./;rm -rf luci-app-socat
         ) &
         (
+        git_sparse_clone master https://github.com/immortalwrt/packages.git "pkgim" net/vsftpd
         git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod
         git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leanpkg" applications/luci-app-wireguard
         ) &
@@ -91,7 +92,6 @@ jobs:
         git_sparse_clone openwrt-24.10 https://github.com/immortalwrt/luci.git "immortal" applications/luci-app-webadmin \
         applications/luci-app-samba4 applications/luci-app-ramfree applications/luci-app-nfs applications/luci-app-zerotier \
         applications/luci-app-natmap applications/luci-app-vsftpd
-        git_sparse_clone master https://github.com/immortalwrt/packages.git "immortalpkg" net/vsftpd
         ) &
     - name: Replace text in files
       run: sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' $(find ./ -type f -name "Makefile")
