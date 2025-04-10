@@ -70,6 +70,7 @@ jobs:
         git_clone https://github.com/jerrykuku/luci-theme-argon
         git_clone https://github.com/jerrykuku/luci-app-argon-config
         git_clone https://github.com/asvow/luci-app-tailscale
+        git_clone https://github.com/hexsen929/luci-app-zerotier
         git_clone https://github.com/lisaac/luci-app-diskman diskmannm && mv diskmannm/applications/* ./ && rm -rf diskmannm
         ) &
         (
@@ -90,7 +91,7 @@ jobs:
         (
         git_sparse_clone main "https://github.com/Lienol/openwrt-package" "Lienol" luci-app-fileassistant
         git_sparse_clone openwrt-24.10 https://github.com/immortalwrt/luci.git "immortal" applications/luci-app-webadmin \
-        applications/luci-app-samba4 applications/luci-app-ramfree applications/luci-app-nfs applications/luci-app-zerotier \
+        applications/luci-app-samba4 applications/luci-app-ramfree applications/luci-app-nfs \
         applications/luci-app-natmap applications/luci-app-vsftpd
         ) &
     - name: Replace text in files
