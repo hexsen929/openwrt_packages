@@ -23,9 +23,15 @@
     and ensure Npcap (https://npcap.com) is installed to grant masscan raw socket access.
 
 .NOTES
-    Author: cto.new automated agent
+    Author : cto.new automated agent
     Version: 1.0.0
     Date   : 2024-10-24
+
+    运行提示:
+      * 若系统启用了执行策略限制，可使用附带的 masscan-cf.cmd 启动脚本，
+        该批处理会自动以 Bypass 模式调用 PowerShell。
+      * 也可在提升权限的 PowerShell 中执行：
+            powershell -ExecutionPolicy Bypass -File .\masscan-cf.ps1
 
 #>
 
