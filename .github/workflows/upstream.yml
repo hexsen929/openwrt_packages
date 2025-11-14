@@ -136,7 +136,7 @@ jobs:
 
         git_clone https://github.com/lisaac/luci-app-diskman diskmannm && mv diskmannm/applications/* ./ && rm -rf diskmannm
 
-        git_clone https://github.com/EasyTier/luci-app-easytier easytiermv && mv -n easytiermv/luci-app-easytier ./ && rm -rf easytiermv
+        git_clone https://github.com/EasyTier/luci-app-easytier easytiermv && mv -n easytiermv/luci-app-easytier ./ && mv -n easytiermv/easytier ./ && rm -rf easytiermv
 
         ) &
 
