@@ -1,231 +1,182 @@
-# This is free software, lisence use MIT.
-
-# 
-
-# 
-
-# <https://github.com/kiddin9/openwrt-packages>
-
-#
-
 name: Merge-upstream
 
 on:
-
   push:
-
     paths:
-
       - '.github/workflows/upstream.yml'
-
       - '.gitignore'
-
       - 'diy/**'
-
   schedule:
-
-    - cron: 0 */12 * * *
-
+    - cron: '0 */12 * * *'
   workflow_dispatch:
-
     inputs:
-
       ssh:
-
         description: 'ssh'
-
         required: false
-
         default: 'true'
-
   watch:
-
     types: started
-
   repository_dispatch:
 
 jobs:
-
   merge:
-
     if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
-
     runs-on: Ubuntu-24.04
-
     steps:
 
     - name: Checkout
-
       uses: actions/checkout@v2
-
       with:
-
         fetch-depth: 0
 
     - name: Set git identity
-
-      run : |
-
+      run: |
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
         git config --global user.name "github-actions[bot]"
-
         sudo timedatectl set-timezone "Asia/Shanghai"
 
-    - name: Syn upstream
-
+    - name: Sync upstream
       run: |
-
         shopt -s extglob
-
         git rm -r --cache * >/dev/null 2>&1 &
+        rm -rf $(find ./* -maxdepth 0 -type d ! -name "diy") >/dev/null 2>&1
 
-        rm -rf `find ./* -maxdepth 0 -type d ! -name "diy"` >/dev/null 2>&1
+        #############################
+        # 定义函数
+        #############################
 
-        function git_clone() (
-
-          git clone --depth 1 $1 $2 || true
-
+        git_clone() (
+          git clone --depth 1 "$1" "$2" || true
         )
 
-        function git_sparse_clone() (
-
-          branch="$1" rurl="$2" localdir="$3" && shift 3
-
-          git clone -b $branch --depth 1 --filter=blob:none --sparse $rurl $localdir
-
-          cd $localdir
-
+        git_sparse_clone() (
+          branch="$1"; rurl="$2"; localdir="$3"; shift 3
+          git clone -b "$branch" --depth 1 --filter=blob:none --sparse "$rurl" "$localdir"
+          cd "$localdir"
           git sparse-checkout init --cone
-
-          git sparse-checkout set $@
-
-          mv -n $@ ../
-
+          git sparse-checkout set "$@"
+          mv -n "$@" ../
           cd ..
+          rm -rf "$localdir"
+        )
 
-          rm -rf $localdir
-
-          )
-
-        function mvdir() {
-
-        mv -n `find $1/* -maxdepth 0 -type d` ./
-
-        rm -rf $1
-
+        mvdir() {
+          mv -n $(find "$1"/* -maxdepth 0 -type d) ./
+          rm -rf "$1"
         }
 
+        #############################
+        # 并发任务 1
+        #############################
         (
+          git_clone https://github.com/xiaorouji/openwrt-passwall.git openwrt-passwall
+          mv openwrt-passwall/luci-app-passwall ./
+          rm -rf openwrt-passwall
 
-        git_clone https://github.com/xiaorouji/openwrt-passwall.git && mv openwrt-passwall/luci-app-passwall ./;rm -rf openwrt-passwall
-
-        git_clone https://github.com/fw876/helloworld && mvdir helloworld
-
+          git_clone https://github.com/fw876/helloworld helloworld
+          mvdir helloworld
         ) &
 
+        #############################
+        # 并发任务 2
+        #############################
         (
+          git_clone https://github.com/jerrykuku/luci-theme-argon luci-theme-argon
+          git_clone https://github.com/jerrykuku/luci-app-argon-config luci-app-argon-config
+          git_clone https://github.com/asvow/luci-app-tailscale luci-app-tailscale
+          git_clone https://github.com/lisaac/luci-app-diskman diskmannm
+          mv diskmannm/applications/* ./
+          rm -rf diskmannm
 
-        git_clone https://github.com/jerrykuku/luci-theme-argon
-
-        git_clone https://github.com/jerrykuku/luci-app-argon-config
-
-        git_clone https://github.com/asvow/luci-app-tailscale
-
-        # git_clone https://github.com/hexsen929/luci-app-zerotier
-
-        git_clone https://github.com/lisaac/luci-app-diskman diskmannm && mv diskmannm/applications/* ./ && rm -rf diskmannm
-
-        git_clone https://github.com/EasyTier/luci-app-easytier easytiermv && mv -n easytiermv/luci-app-easytier ./ && mv -n easytiermv/easytier ./ && rm -rf easytiermv
-
+          git_clone https://github.com/EasyTier/luci-app-easytier easytiermv
+          mv -n easytiermv/luci-app-easytier ./
+          mv -n easytiermv/easytier ./
+          rm -rf easytiermv
         ) &
 
+        #############################
+        # 并发任务 3
+        #############################
         (
+          git_clone https://github.com/xiaorouji/openwrt-passwall-packages passwallpkgs
+          mv passwallpkgs/* ./
+          rm -rf passwallpkgs
 
-        git_clone https://github.com/xiaorouji/openwrt-passwall-packages && mv openwrt-passwall-packages/* ./ && rm -rf openwrt-passwall-packages
-
-        git_clone https://github.com/xiaorouji/openwrt-passwall2 passwall2 && mv -n passwall2/luci-app-passwall2 ./;rm -rf passwall2
-
-        # git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall passwall && mv -n passwall/luci-app-passwall ./;rm -rf passwall
-
+          git_clone https://github.com/xiaorouji/openwrt-passwall2 passwall2
+          mv -n passwall2/luci-app-passwall2 ./
+          rm -rf passwall2
         ) &
 
+        #############################
+        # 并发任务 4
+        #############################
         (
+          git_clone https://github.com/gdy666/luci-app-lucky lukymv
+          mv -n lukymv/luci-app-lucky ./
+          mv -n lukymv/lucky ./
+          rm -rf lukymv
 
-        git_clone https://github.com/gdy666/luci-app-lucky lukymv && mv -n lukymv/luci-app-lucky ./ && mv -n lukymv/lucky ./;rm -rf lukymv
+          git_clone https://github.com/sbwml/luci-app-mosdns mosdnsmv
+          mv -n mosdnsmv/luci-app-mosdns ./
+          mv -n mosdnsmv/mosdns mosdnsmv/v2dat ./
+          rm -rf mosdnsmv
 
-        git_clone https://github.com/sbwml/luci-app-mosdns mosdnsmv && mv -n mosdnsmv/luci-app-mosdns ./ && mv -n mosdnsmv/mosdns mosdnsmv/v2dat ./;rm -rf mosdnsmv
-
-        git_clone https://github.com/chenmozhijin/luci-app-socat && mv luci-app-socat/luci-app-socat ./;rm -rf luci-app-socat
-
+          git_clone https://github.com/chenmozhijin/luci-app-socat luci-app-socat
+          mv luci-app-socat/luci-app-socat ./
+          rm -rf luci-app-socat
         ) &
 
+        #############################
+        # 并发任务 5（Sparse Clone）
+        #############################
         (
-
-        git_sparse_clone master https://github.com/immortalwrt/packages.git "pkgim" net/vsftpd
-
-        git_sparse_clone master "https://github.com/coolsnowwolf/lede" "leanpkg" package/lean/ddns-scripts_dnspod
-
-        git_sparse_clone master "https://github.com/coolsnowwolf/luci" "leanpkg" applications/luci-app-wireguard
-
+          git_sparse_clone master https://github.com/immortalwrt/packages.git pkgim net/vsftpd
+          git_sparse_clone master https://github.com/coolsnowwolf/lede leanpkg package/lean/ddns-scripts_dnspod
+          git_sparse_clone master https://github.com/coolsnowwolf/luci leanpkg2 applications/luci-app-wireguard
         ) &
 
+        #############################
+        # 并发任务 6（immortalwrt/luci openwrt-24.10）
+        #############################
         (
+          apps=(
+            applications/luci-app-webadmin
+            applications/luci-app-samba4
+            applications/luci-app-ramfree
+            applications/luci-app-nfs
+            applications/luci-app-zerotier
+            applications/luci-app-natmap
+            applications/luci-app-vsftpd
+          )
 
-        git_sparse_clone main "https://github.com/Lienol/openwrt-package" "Lienol" luci-app-fileassistant
-
-        apps=(
-          applications/luci-app-webadmin
-          applications/luci-app-samba4
-          applications/luci-app-ramfree
-          applications/luci-app-nfs
-          applications/luci-app-zerotier
-          applications/luci-app-natmap
-          applications/luci-app-vsftpd
-        )
-        git_sparse_clone openwrt-24.10 https://github.com/immortalwrt/luci.git immortal "${apps[@]}"
-
+          git_sparse_clone openwrt-24.10 https://github.com/immortalwrt/luci.git immortal "${apps[@]}"
         ) &
+
+        wait
 
     - name: Replace text in files
-
-      run: sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' $(find ./ -type f -name "Makefile")
+      run: |
+        sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' $(find ./ -type f -name "Makefile")
 
     - name: Delete duplicated packages
-
       run: |
-
         shopt -s extglob
-
         rm -Rf */.git
 
     - name: SSH connection to Actions
-
       uses: kiddin9/debugger-action@master
-
       if: github.event.inputs.ssh == 'true'
 
     - name: Apply
-
       run: |
-
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
-
         git add .
-
-        git commit -m "${Emoji[$[$RANDOM % ${#Emoji[@]}]]} Sync $(date +%Y-%m-%d" "%H:%M:%S)"
-
+        git commit -m "${Emoji[$RANDOM % ${#Emoji[@]}]} Sync $(date '+%Y-%m-%d %H:%M:%S')"
         git push -f
 
     - name: Delete workflow runs
-
       uses: Mattraks/delete-workflow-runs@main
-
       continue-on-error: true
-
       with:
-
         retain_days: 1
-
         keep_minimum_runs: 3
-
