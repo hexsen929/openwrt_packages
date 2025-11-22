@@ -133,6 +133,7 @@ jobs:
           git_sparse_clone master https://github.com/immortalwrt/packages.git pkgim net/vsftpd
           git_sparse_clone master https://github.com/coolsnowwolf/lede leanpkg package/lean/ddns-scripts_dnspod
           git_sparse_clone master https://github.com/coolsnowwolf/luci leanpkg2 applications/luci-app-wireguard
+          git_sparse_clone main "https://github.com/Lienol/openwrt-package" "Lienol" luci-app-fileassistant
         ) &
 
         #############################
